@@ -5,7 +5,7 @@
       private static $pdo; //It keeps the connection;
 
       public static function getConnection(){
-         if(!self::$pdo){ // Verifica se já existe uma conexão
+         if(!self::$pdo){ // Check if has a connection.
 
             $db = getenv('DB_NAME');
             $host = getenv('DB_HOST');
@@ -18,7 +18,7 @@
                
                var_dump(self::$pdo);
             }catch(PDOException $e){
-               echo 'Não foi possível conectar ao banco de dados.';
+               echo 'It was not possible connect to the database.';
                die();
             }
          }
