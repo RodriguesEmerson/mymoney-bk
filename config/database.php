@@ -18,7 +18,7 @@
                
                var_dump(self::$pdo);
             }catch(PDOException $e){
-               echo 'It was not possible connect to the database.';
+               echo 'It was not possible connecting to the database.';
                die();
             }
          }
