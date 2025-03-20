@@ -2,18 +2,15 @@
 require_once __DIR__ . '/../Models/user.php';
 require_once __DIR__ . '/../Helpers/JWT.php';
 
-class AuthController
-{
+class AuthController{
    private $userModel;
 
-   public function __construct()
-   {
+   public function __construct(){
       $this->userModel = new User();
    }
 
 
-   public function login(string $email, string $password)
-   {
+   public function login(string $email, string $password){
       $user = $this->userModel->getByEmail($email);
 
       if ($user && password_verify($password, $user['password'])) {
@@ -23,12 +20,11 @@ class AuthController
          http_response_code(401);
          echo json_encode(["error" => "Invalid credentials"]);
       }
-   }
+   }  
 
-   public function verifyToken()
-   {
+   public function verifyToken(){
       $headers = getallheaders();
-      if (!isset($headers['Authorization'])) {
+      if (!isset($headers['Authorization'])){
          http_response_code(401);
          echo json_encode(["error" => "Token missing"]);
          return;
@@ -38,6 +34,7 @@ class AuthController
       $decoded = JWTHandler::validateToken($token);
 
       if ($decoded) {
+         http_response_code(200);
          echo json_encode(["message" => "Access granted", "user_id" => $decoded->user_id]);
       } else {
          http_response_code(401);

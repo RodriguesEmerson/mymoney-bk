@@ -1,15 +1,4 @@
 <?php 
-   // class entries{
-   //    public function __construct(
-   //       public int $id,
-   //       public string $description,
-   //       public string $category,
-   //       public string $date,
-   //       public float $value,
-   //       public int $foreing_key,
-   //    ){}
-   // }
-
    require_once __DIR__ . '/../../config/database.php';
 
    class Entries {
@@ -27,5 +16,4 @@
          return $result;
       }
    }
-
 ?>

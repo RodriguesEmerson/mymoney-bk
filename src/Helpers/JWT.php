@@ -15,7 +15,7 @@
          $payload = [
             'iss' => 'localhost',
             'iat' => time(),
-            'exp' => time() + (60 * 60), //Token expire in 1 hour
+            'exp' => time() + (60 * 60), //Token expires in 1 hour
             'userId' => $userId
          ];
          return JWT::encode($payload, self::$secret_key, 'HS256');

@@ -8,12 +8,9 @@
       }
 
       public function listEntries(){
-            $entries = $this->EntrieModel->getEntries();
-            echo "<pre>";
-            var_dump($entries);
-            echo "</pre>";
-            header('Content-Type: application/json');
-            echo json_encode($entries);
+         $entries = $this->EntrieModel->getEntries();
+         header('Content-Type: application/json');
+         echo json_encode($entries);
       }
    }
 ?>
