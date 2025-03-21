@@ -16,7 +16,6 @@
                self::$pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", "$user", "$password");
                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
                
-               var_dump(self::$pdo);
             }catch(PDOException $e){
                echo 'It was not possible connecting to the database.';
                die();

@@ -14,6 +14,7 @@
             if($this->newUser->createNewUser($name, $lastname, $email, $password)){
                http_response_code(201); //Successful Creation status code;
                echo json_encode(['message' => 'New user created.']);
+               header('Location: ./../../novouser.php');
             }else{
                http_response_code(500); //Internal server error
                echo json_encode(['message' => 'Erro creating user.']);               
