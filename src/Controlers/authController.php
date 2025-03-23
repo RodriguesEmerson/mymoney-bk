@@ -14,8 +14,17 @@ class AuthController{
       $user = $this->userModel->getByEmail($email);
 
       if ($user && password_verify($password, $user['password'])) {
-         $token = JWTHandler::generateToken($user['id']);
-         echo json_encode(["token" => $token]);
+         $token = JWTHandler::generateToken($user['id'], $user['name'], $user['email']);
+
+         setcookie('jwt', $token, [
+            'expires' => time() + 3600,  //It xxpires in 1 hour
+            'path' => '/',               //Avalaible for the entire site
+            'httponly' => true,          //It protects against accesses by javascript
+            'secure' => true,            //Only HTTPS
+            'samesite' => 'Strict'       //Avoid other sites accsses
+         ]);
+
+         echo json_encode(["message" => 'Authenticated successfuly']);
       } else {
          http_response_code(401);
          echo json_encode(["error" => "Invalid credentials"]);
@@ -23,22 +32,23 @@ class AuthController{
    }  
 
    public function verifyToken(){
-      $headers = getallheaders();
-      if (!isset($headers['Authorization'])){
+      $token = $_COOKIE['jwt'] ?? null;
+      if (!isset($token)){
          http_response_code(401);
          echo json_encode(["error" => "Token missing"]);
-         return;
+         return false;
+         exit;
       }
 
-      $token = str_replace("Bearer ", "", $headers['Authorization']);
-      $decoded = JWTHandler::validateToken($token);
+      $userData = JWTHandler::validateToken($token);
 
-      if ($decoded) {
-         http_response_code(200);
-         echo json_encode(["message" => "Access granted", "user_id" => $decoded->user_id]);
-      } else {
-         http_response_code(401);
-         echo json_encode(["error" => "Invalid token"]);
-      }
+      if (!$userData) {
+         http_response_code(403);
+         echo json_encode(["message" => "Invalid or expired token"]);
+         return false;
+         exit;
+      } 
+
+      return $userData;
    }
 }

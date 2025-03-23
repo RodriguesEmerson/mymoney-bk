@@ -2,6 +2,7 @@
    ini_set('display_errors', 1);
    error_reporting(E_ALL);
    
+   
    header('Content-Type: application/json; charset=UTF-8');
    header("Access-Control-Allow-Origin: *"); // Permite qualquer origem
    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
@@ -9,42 +10,20 @@
    
    require_once __DIR__ . '/../src/Controlers/authController.php';
    require_once __DIR__ . '/../src/Controlers/newUserController.php';
-   
+
    $authController = new AuthController();
    $newUserController = new NewUserController();
-   $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+   
+   $request = str_replace('/mymoney-bk/public', '', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
    $method = $_SERVER['REQUEST_METHOD'];
 
-   // if(!isset($data['action'])){
-   //    echo json_encode(['message' => 'Action not defined']);
-   //    exit;
-   // }
-   /**
-    * Login
-    */
-  
-   if($request == '/login' && $method == 'POST'){
+
+   if($request == '/signup.php' && $method == 'POST'){
       $data = json_decode(file_get_contents('php://input'), true);
-      if (!$data) {
-         echo json_encode(['error' => 'Invalid JSON']);
-         http_response_code(400);
-         exit;
-     }
+      $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+
       ///.....Here still needs to validate the entries data.
-      $authController->login($data['email'], $data['password']);
-     exit;
-   }elseif($request == '/verify-token' && $method == 'GET'){
-      $authController->verifyToken();
+      $newUserController->createUser($data['name'], $data['lastname'], $data['email'], $hashedPassword);
       exit;
-
-   }else{
-      http_response_code(404);
-      echo json_encode(['error' => 'Rout not found']);
-   };
-
-   /**
-    * Create user
-    */
-  
-
+   }
 ?>

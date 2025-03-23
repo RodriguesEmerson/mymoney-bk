@@ -7,11 +7,9 @@
 </head>
 <body>
    <form id="formID" >
-      <input type="text" name="name" placeholder="Name" value="Emerson">
-      <input type="text" name="lastname" placeholder="Lastname" value="Teste">
       <input type="email" name="email" placeholder="E-mail" value="emerson@teste.com">
       <input type="password" name="password" placeholder="Password" value="12345567">
-      <input type="submit" value="SignUp">
+      <input type="submit" value="SignIn">
    </form>
 
    <script>
@@ -22,7 +20,7 @@
          const formData = new FormData(form);
          const data = Object.fromEntries(formData.entries());
 
-         const response = await fetch('http://localhost/mymoney-bk/public/signup.php', {
+         const response = await fetch('http://localhost/mymoney-bk/public/signin.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)

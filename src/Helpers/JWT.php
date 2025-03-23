@@ -10,13 +10,15 @@
       /**
        * Generete a JWT token
        */
-      public static function generateToken($userId){
+      public static function generateToken($userId, $userName, $userEmail){
          self::$secret_key = getenv('JWT_SECRET_KEY');
          $payload = [
             'iss' => 'localhost',
             'iat' => time(),
             'exp' => time() + (60 * 60), //Token expires in 1 hour
-            'userId' => $userId
+            'userId' => $userId,
+            'userName' => $userName,
+            'userEmail' => $userEmail
          ];
          return JWT::encode($payload, self::$secret_key, 'HS256');
       }
