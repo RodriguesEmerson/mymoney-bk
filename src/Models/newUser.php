@@ -19,11 +19,8 @@
             return true;
             
          }catch(Exception $e){
-            // http_response_code(401);
-            // echo json_encode(['error' => 'It was not possible creating new user.']);
             return false;
          }
       }
-   
    }
 ?>
