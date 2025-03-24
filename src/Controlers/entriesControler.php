@@ -26,8 +26,10 @@
          echo json_encode(['message' => 'Internal sever error']);
       }
 
+      /**
+       * Insert new entries into the database.
+       */
       public function setEntryController(string $description, string $category, string $date, float $value, int $userId){
-         // echo json_encode(['m' => 'teste']);exit;
          if($this->EntrieModel->setEntry($description, $category, $date, $value, $userId)){
             http_response_code(201);
             header('Content-Type: application/json');
@@ -38,6 +40,10 @@
          http_response_code(500);
          header('Content-Type: application/json');
          echo json_encode(['message' => 'Internal server error']);
+      }
+
+      public function updateEntryController(){
+         
       }
    }
 ?>

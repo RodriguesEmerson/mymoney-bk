@@ -45,9 +45,8 @@
       <input type="text" name="category" placeholder="Category" value="Category-1">
       <input type="text" name="date" placeholder="Date" value="24-03-2025">
       <input type="text" name="value" placeholder="Value" value="3.52">
-      <input type="submit" value="SignUp">
+      <input type="submit" value="Add entry">
    </form>
-
 
    <div id="entries">
       <table>
@@ -61,7 +60,7 @@
          </thead>
          <tbody>
             <?php foreach($entries AS $entry):?>
-               <tr>
+               <tr id="<?php echo e($entry['id'])?>" class="entry">
                   <td><?php echo e($entry['description']) ?></td>
                   <td><?php echo e($entry['category']) ?></td>
                   <td><?php echo e($entry['date']) ?></td>
@@ -72,7 +71,17 @@
       </table>
    </div>
 
+   <form id="formUpdateID" >
+      <input type="text" name="description" placeholder="Description">
+      <input type="text" name="category" placeholder="Category">
+      <input type="text" name="date" placeholder="Date">
+      <input type="text" name="value" placeholder="Value">
+      <input type="submit" value="Apdate entry">
+   </form>
+
     <script>
+
+      //Insert new entry========================================================================
       const form = document.querySelector('#formID');
       form.addEventListener('submit', req);
       async function req(e){
@@ -87,6 +96,53 @@
          });
          const response = await request.json();
          console.log(response);
+      }
+
+
+      //Update entry==============================================================================
+      const trEntry = document.querySelectorAll('.entry');
+      const formUpdate = document.querySelector('#formUpdateID');
+      formUpdate.addEventListener('submit', update);
+
+      const originalFormData = {};
+      trEntry.forEach(tr => {
+         tr.addEventListener('click', fillFormUpdate = () =>{
+            const trId = tr.getAttribute('id');
+            originalFormData.description = tr.children[0].textContent;
+            originalFormData.category = tr.children[1].textContent;
+            originalFormData.date = tr.children[2].textContent;
+            originalFormData.value = tr.children[3].textContent;
+
+            for(ind = 0; ind<= 3; ind++){
+               formUpdate.children[ind].value = tr.children[ind].textContent;
+            }
+         });
+      });
+
+
+      async function update(e){
+         e.preventDefault();
+         const formdata = new FormData(formUpdate);
+         const data = Object.fromEntries(formdata.entries());
+
+         //Gets only altered data;
+         const alteredData = {}
+         for(const key in originalFormData){
+            if(originalFormData[key].trim() !== data[key].trim()){
+               alteredData[key] = data[key].trim();
+            };
+         }
+
+         if(Object.entries(alteredData).length == 0) return;
+         
+         const request = await fetch('http://localhost/mymoney-bk/public/entries.php', {
+            method: 'UPDATE',
+            headers: {'Content-Type': 'application/json', 'Authorization': ``},
+            body: JSON.stringify(alteredData)
+         });
+         const response = await request.json();
+         console.log(response);
+
       }
 
    </script>
