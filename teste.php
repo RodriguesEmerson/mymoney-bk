@@ -20,6 +20,7 @@
       $context = stream_context_create($options);
       $data = file_get_contents('http://localhost/mymoney-bk/public/entries.php', false, $context);
 
+      // var_dump($data);
       $entries = json_decode($data, true)['data'];
       // var_dump($entries);
 
@@ -35,9 +36,18 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Document</title>
 </head>
-<body>
+<body style="font-family: Arial, Helvetica, sans-serif;">
    <p>Ola: <?php echo $user['userName']?></p>
    <p>Email: <?php echo $user['userEmail']?></p>
+
+   <form id="formID" >
+      <input type="text" name="description" placeholder="Description" value="Test-1">
+      <input type="text" name="category" placeholder="Category" value="Category-1">
+      <input type="text" name="date" placeholder="Date" value="24-03-2025">
+      <input type="text" name="value" placeholder="Value" value="3.52">
+      <input type="submit" value="SignUp">
+   </form>
+
 
    <div id="entries">
       <table>
@@ -63,35 +73,21 @@
    </div>
 
     <script>
-      const entriesDiv = document.querySelector('#entries');
+      const form = document.querySelector('#formID');
+      form.addEventListener('submit', req);
+      async function req(e){
+         e.preventDefault();
+         const formdata = new FormData(form);
+         const data = Object.fromEntries(formdata.entries());
 
-      window.addEventListener('load', req);
-
-      async function req(){
-         const data = await fetch('http://localhost/mymoney-bk/public/entries.php',{
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'}
+         const request = await fetch('http://localhost/mymoney-bk/public/entries.php',{
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Authorization': ``},
+            body: JSON.stringify(data)
          });
-         const response = await data.json();
-         console.log(response.data);
-
-         const entries = response.data;
-
-         entries.forEach(entry => {
-            
-         });
-
-
-
+         const response = await request.json();
+         console.log(response);
       }
-
-
-      function create(type, att){
-         const element = document.createElement(type);
-         element.setAttribute(att.att, att.value);
-
-         return element;
-      } 
 
    </script>
 </body>
