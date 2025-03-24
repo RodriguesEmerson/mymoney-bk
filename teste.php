@@ -1,10 +1,32 @@
 <?php 
    require_once __DIR__ . '/src/Auth/tokenAuth.php';
    $tokenAuth = new TokenAuth();
-   $userData = $tokenAuth->verifyToken(); // 🔒 Protegendo a rota
-   $user = (array) $userData;
+   $token = $_COOKIE['JWTToken'] ?? null;
 
+   $userData = $tokenAuth->verifyToken($token); //🔒 Protegendo a rota; //If the requisition were made with js, it doesn't need to pass token.
+   $user = (array) $userData;
+   
    require_once __DIR__ . '/src/Controlers/entriesControler.php';
+      $token = $_COOKIE['JWTToken'] ?? null;
+      $options = [
+         'http' => [
+            'method' => 'GET',
+            'header' => 
+               "Content-Type: application/json\r\n" . 
+               "Authorization: Bearer $token\r\n",
+            'timeout' => 10,
+         ]
+      ];
+      $context = stream_context_create($options);
+      $data = file_get_contents('http://localhost/mymoney-bk/public/entries.php', false, $context);
+
+      $entries = json_decode($data, true)['data'];
+      // var_dump($entries);
+
+   function e($value){
+      return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+   }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -17,9 +39,30 @@
    <p>Ola: <?php echo $user['userName']?></p>
    <p>Email: <?php echo $user['userEmail']?></p>
 
-   <div id="entries"></div>
+   <div id="entries">
+      <table>
+         <thead>
+            <tr>
+               <th>Description</th>
+               <th>Category</th>
+               <th>Date</th>
+               <th>Value</th>
+            </tr>
+         </thead>
+         <tbody>
+            <?php foreach($entries AS $entry):?>
+               <tr>
+                  <td><?php echo e($entry['description']) ?></td>
+                  <td><?php echo e($entry['category']) ?></td>
+                  <td><?php echo e($entry['date']) ?></td>
+                  <td><?php echo e($entry['value']) ?></td>
+               </tr>
+            <?php endforeach;?>
+         </tbody>
+      </table>
+   </div>
 
-   <script>
+    <script>
       const entriesDiv = document.querySelector('#entries');
 
       window.addEventListener('load', req);
@@ -30,8 +73,25 @@
             headers: {'Content-Type': 'application/json'}
          });
          const response = await data.json();
-         console.log(response)
+         console.log(response.data);
+
+         const entries = response.data;
+
+         entries.forEach(entry => {
+            
+         });
+
+
+
       }
+
+
+      function create(type, att){
+         const element = document.createElement(type);
+         element.setAttribute(att.att, att.value);
+
+         return element;
+      } 
 
    </script>
 </body>

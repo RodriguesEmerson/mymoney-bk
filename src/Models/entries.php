@@ -22,5 +22,22 @@
             return false;
          }
       }
+
+      public function setEntry(string $description, string $category, string $date, float $value, int $userId):bool{
+         try{
+            $stmt = $this->pdo->prepare('INSERT INTO `entries` (`description`, `category`, `date`, `value`, `foreing_key`) 
+                                         VALUES (:description, :category, :date, :value, :foreing_key)');
+            $stmt->bindValue(':description', $description);
+            $stmt->bindValue(':category', $category);
+            $stmt->bindValue(':date', $date);
+            $stmt->bindValue(':value', $value);
+            $stmt->bindValue(':foreing_key', $userId);
+
+            $stmt->execute();
+            return true;
+         }catch(Exception $e){
+            return false;
+         }
+      }
    }
 ?>

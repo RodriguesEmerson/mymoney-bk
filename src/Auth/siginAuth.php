@@ -16,7 +16,7 @@
             $token = JWTHandler::generateToken($user['id'], $user['name'], $user['email']);
 
             setcookie('JWTToken', $token, [
-               'expires' => time() + 3600,  //It xxpires in 1 hour
+               'expires' => time() + 3600,  //It expires in 1 hour
                'path' => '/',               //Avalaible for the entire site
                'httponly' => true,          //It protects against accesses by javascript
                'secure' => true,            //Only HTTPS
