@@ -7,7 +7,7 @@
          $this->pdo = Database::getConnection();
       }
 
-      public function getEntries(string $userId, int $limit){
+      public function getEntries(string $userId, int $limit):bool|array{
          try{
             $stmt = $this->pdo->prepare('SELECT `id`, `description`, `category`, `date`, `value`, `foreing_key` 
                                          FROM `entries` WHERE `foreing_key` = :foreingKey ORDER BY `date` DESC LIMIT :limit');
@@ -17,7 +17,17 @@
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             return $result;
+         }catch(Exception $e){
+            return false;
+         }
+      }
 
+      public function getCategories():bool|array{
+         try{
+            $stmt = $this->pdo->prepare('SELECT `categories` FROM `categories`');
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result;
          }catch(Exception $e){
             return false;
          }
@@ -40,8 +50,8 @@
          }
       }
 
-      public function updateEntry(){
-         
+      public function updateEntry($data){
+         //CRIAR FUNÇÃO PARA INSERIR DADOS NO DB
       }
    }
 ?>
