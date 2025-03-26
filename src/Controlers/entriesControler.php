@@ -46,7 +46,7 @@
       }
 
       public function updateEntryController($data){
-
+        
          foreach($data AS $item => $value){
             switch($item) {
                case 'date':
@@ -100,18 +100,20 @@
             }
          }
 
-         //
-         if($this->EntrieModel->updateEntry($data)){
+         try{
             http_response_code(200);
             header('Content-Type: application/json');
             echo json_encode(['message' => 'Entry updated']);
             exit;
+         }catch(Exception $e){
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode(['message' => 'Internal server error']);
+            exit;
+         }
+         if($this->EntrieModel->updateEntry($data)){
          };
 
-         http_response_code(500);
-         header('Content-Type: application/json');
-         echo json_encode(['message' => 'Internal server error']);
-         exit;
       }
    }
 ?>

@@ -103,11 +103,12 @@
       const trEntry = document.querySelectorAll('.entry');
       const formUpdate = document.querySelector('#formUpdateID');
       formUpdate.addEventListener('submit', update);
+      let trId = '';
 
       const originalFormData = {};
       trEntry.forEach(tr => {
          tr.addEventListener('click', fillFormUpdate = () =>{
-            const trId = tr.getAttribute('id');
+            trId = tr.getAttribute('id');
             originalFormData.description = tr.children[0].textContent;
             originalFormData.category = tr.children[1].textContent;
             originalFormData.date = tr.children[2].textContent;
@@ -132,6 +133,7 @@
                alteredData[key] = data[key].trim();
             };
          }
+         alteredData.id = trId;
 
          if(Object.entries(alteredData).length == 0) return;
          

@@ -9,8 +9,8 @@
          return true;
       }
 
-      public function validateString($value):bool{
-         if(count_chars($value) > 255 || count_chars($value == 0)){
+      public function validateString(string $value):bool{
+         if(strlen($value) > 255 || strlen($value) == 0){
             return false;
          }
          return true;

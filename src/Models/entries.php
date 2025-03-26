@@ -51,7 +51,33 @@
       }
 
       public function updateEntry($data){
-         //CRIAR FUNÇÃO PARA INSERIR DADOS NO DB
+
+         if(!isset($data['id']) || empty($data['id'])){
+            throw new Exception('Missing Id');
+         }
+
+         $query = [];
+         $params = [];
+         
+         foreach ($data AS $column => $value) {
+            if($column == 'id') continue;
+            $query[] = "`$column` = :$column"; //Avoid SQL Injection
+            $params[":$column"] = $value;
+         }
+
+         if(empty($query)){
+            throw new Exception('There is no any data to update');
+         }
+
+         $setQuery = implode(",", $query);
+         $sql = "UPDATE `entries` SET $setQuery WHERE `id` = :id ";
+         $params[':id'] = $data['id'];
+    
+         $stmt = $this->pdo->prepare($sql);
+         if(!$stmt->execute($params)){
+            throw new Exception('Internal server error');
+         };
+         return true;
       }
    }
 ?>

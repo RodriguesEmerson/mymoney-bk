@@ -39,7 +39,6 @@
          break;
          case 'UPDATE':
             $data = json_decode(file_get_contents('php://input'), true);
-            
             $entriesControler->updateEntryController($data);
          break;
       }
