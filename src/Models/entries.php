@@ -26,7 +26,7 @@
          try{
             $stmt = $this->pdo->prepare('SELECT `categories` FROM `categories`');
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
             return $result;
          }catch(Exception $e){
             return false;
@@ -72,10 +72,13 @@
          $setQuery = implode(",", $query);
          $sql = "UPDATE `entries` SET $setQuery WHERE `id` = :id ";
          $params[':id'] = $data['id'];
-    
+         
+         // echo json_decode($sql);exit;
+
          $stmt = $this->pdo->prepare($sql);
          if(!$stmt->execute($params)){
             throw new Exception('Internal server error');
+            exit;
          };
          return true;
       }

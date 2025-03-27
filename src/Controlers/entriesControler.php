@@ -74,7 +74,6 @@
                   }
                break;
                case 'category':
-
                   $categories = $this->EntrieModel->getCategories();
                   if(!$categories){
                      http_response_code(500);
@@ -89,7 +88,6 @@
                      echo json_encode(['message' => 'Invalid Category']);
                      exit;
                   }
-
                   if(!in_array($value, $categories)){
                      http_response_code(400);
                      header('Content-Type: application/json');
@@ -101,6 +99,7 @@
          }
 
          try{
+            $this->EntrieModel->updateEntry($data);
             http_response_code(200);
             header('Content-Type: application/json');
             echo json_encode(['message' => 'Entry updated']);
@@ -111,8 +110,6 @@
             echo json_encode(['message' => 'Internal server error']);
             exit;
          }
-         if($this->EntrieModel->updateEntry($data)){
-         };
 
       }
    }
